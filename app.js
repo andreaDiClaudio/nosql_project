@@ -3,15 +3,19 @@
 
 import express from "express";
 import dotenv from "dotenv";
+import connectDB from "./db.js"; // Import the db connection
 
 // Import the express module to create a web server
 const app = express();
 // Load environment variables from a .env file into process.env
 dotenv.config();
 
+// Connect to MongoDB
+connectDB();
+
 // Test get request
 app.get('/api/test', (req, res) => {
-    res.status(200).json({message: 'Hello World'});
+    res.status(200).json({ message: 'Hello World' });
 });
 
 
