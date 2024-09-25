@@ -14,6 +14,7 @@ app.get('/api/test', (req, res) => {
     res.status(200).json({message: 'Hello World'});
 });
 
+
 // Define the port on which the server will listen, using an environment variable
 const PORT = process.env.PORT;
 // Start the server and listen on the specified port
