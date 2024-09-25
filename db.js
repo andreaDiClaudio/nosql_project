@@ -2,6 +2,7 @@
 import mongoose from 'mongoose';
 import { User, TravelDestination, Location, Country } from './model.js'; 
 
+//connects to db and ,if not exists, creates schema with default sample data.
 const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGODB_URI);

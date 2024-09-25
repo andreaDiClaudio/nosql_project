@@ -1,6 +1,8 @@
 // models.js
 import mongoose from 'mongoose';
 
+// TODO Doublecheck if it is ok that mongodb creates the default _id for each schema and that the __v is also displayed
+
 // User Schema
 const userSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true }, // Assuming userId is a string
