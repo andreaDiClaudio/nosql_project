@@ -129,7 +129,7 @@ app.post("/api/traveldestinations", async (req, res) => {
       const myColl = myDB.collection("traveldestinations");
   
       // Delete the travel destination with the given ObjectId
-      const result = await myColl.deleteOne({ _id: new ObjectId(id) });
+      const result = await myColl.deleteOne({ destinationId: new ObjectId(id) });
   
       // Check if any document was deleted
       if (result.deletedCount === 0) {
