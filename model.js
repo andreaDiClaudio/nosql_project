@@ -1,3 +1,4 @@
+// models.js
 import mongoose from 'mongoose';
 
 // User Schema
@@ -11,27 +12,27 @@ const userSchema = new mongoose.Schema({
 
 // Travel Destination Schema
 const travelDestinationSchema = new mongoose.Schema({
-    destinationId: { type: Number, required: true, unique: true }, 
+    destinationId: { type: Number, required: true, unique: true }, // Changed to Number
     title: { type: String, required: true },
     description: { type: String },
-    locationId: { type: Number, ref: 'Location' }, // Foreign key reference to Location
+    locationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Location' }, // Foreign key reference to Location
     picture: { type: String }, // Assuming the picture is a URL
     dateFrom: { type: Date },
     dateTo: { type: Date },
-    userId: { type: Number, ref: 'User' }, // Foreign key reference to User
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Foreign key reference to User
     createDate: { type: Date, default: Date.now }
 });
 
 // Location Schema
 const locationSchema = new mongoose.Schema({
-    locationId: { type: Number, required: true, unique: true }, 
+    locationId: { type: Number, required: true, unique: true }, // Changed to Number
     location: { type: String, required: true },
-    countryId: { type: Number, ref: 'Country' } // Foreign key reference to Country
+    countryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Country' } // Foreign key reference to Country
 });
 
 // Country Schema
 const countrySchema = new mongoose.Schema({
-    countryId: { type: Number, required: true, unique: true },
+    countryId: { type: Number, required: true, unique: true }, // Changed to Number
     country: { type: String, required: true }
 });
 
