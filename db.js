@@ -1,8 +1,14 @@
-// db.js
 import mongoose from 'mongoose';
-import { User, TravelDestination, Location, Country } from './model.js'; 
+import { User, TravelDestination, Location, Country } from './model.js';
 
-//connects to db and ,if not exists, creates schema with default sample data.
+// Function to generate a unique ID
+const generateUniqueId = () => {
+    const timestamp = Date.now();
+    const randomNum = Math.floor(Math.random() * 1000);
+    return timestamp + randomNum;
+};
+
+// Connect to the database
 const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGODB_URI);
@@ -14,35 +20,49 @@ const connectDB = async () => {
         console.log('Existing collections:', collectionNames);
 
         // Create and populate Countries collection if it doesn't exist or is empty
+        let countryId; // Variable to hold generated country ID
         if (!collectionNames.includes('countries') || (await Country.countDocuments()) === 0) {
             await Country.init();
             console.log('Created Countries collection');
+            await Country.createIndexes({ countryId: 1 }); // Create index for countryId
+            
+            // Generate unique countryId
+            countryId = generateUniqueId();
             await Country.create({
-                countryId: "COUNTRY01",
+                countryId: countryId, // Use generated ID
                 country: "Italy"
             });
             console.log('Added default country to Countries collection');
         }
 
         // Create and populate Locations collection if it doesn't exist or is empty
+        let locationId; // Variable to hold generated location ID
         if (!collectionNames.includes('locations') || (await Location.countDocuments()) === 0) {
             await Location.init();
             console.log('Created Locations collection');
-            const country = await Country.findOne({ countryId: "COUNTRY01" }); // Fetch the default country
+            await Location.createIndexes({ locationId: 1 }); // Create index for locationId
+            
+            // Use the generated countryId to reference the created country
+            locationId = generateUniqueId();
             await Location.create({
-                locationId: "LOC01",
+                locationId: locationId, // Use generated ID
                 location: "Rome",
-                countryId: country._id // Reference the created country
+                countryId: countryId // Reference the created countryId
             });
             console.log('Added default location to Locations collection');
         }
 
         // Create and populate Users collection if it doesn't exist or is empty
+        let userId; // Variable to hold generated user ID
         if (!collectionNames.includes('users') || (await User.countDocuments()) === 0) {
             await User.init();
             console.log('Created Users collection');
+            await User.createIndexes({ userId: 1, email: 1 }); 
+            
+            // Generate unique userId
+            userId = generateUniqueId();
             await User.create({
-                userId: "USER01",
+                userId: userId, // Use generated ID
                 userName: "Andrea",
                 email: "andrea@example.com",
                 password: "password123",
@@ -55,17 +75,19 @@ const connectDB = async () => {
         if (!collectionNames.includes('traveldestinations') || (await TravelDestination.countDocuments()) === 0) {
             await TravelDestination.init();
             console.log('Created Travel Destinations collection');
-            const user = await User.findOne({ userId: "USER01" }); // Fetch the default user
-            const location = await Location.findOne({ locationId: "LOC01" }); // Fetch the default location
+            await TravelDestination.createIndexes({ destinationId: 1 }); // Create index for destinationId
+            
+            // Use the generated userId and locationId for references
+            let destinationId = generateUniqueId(); // Generate unique destinationId
             await TravelDestination.create({
-                destinationId: "DEST01",
+                destinationId: destinationId, // Use generated ID
                 title: "Visit Rome",
                 description: "A beautiful trip to Rome, Italy.",
-                locationId: location._id, // Reference the created location
+                locationId: locationId, // Reference the created locationId
                 picture: "http://example.com/image.jpg",
                 dateFrom: new Date(),
                 dateTo: new Date(new Date().setDate(new Date().getDate() + 7)),
-                userId: user._id, // Reference the created user
+                userId: userId, // Reference the created userId
                 createDate: new Date()
             });
             console.log('Added default travel destination to Travel Destinations collection');
