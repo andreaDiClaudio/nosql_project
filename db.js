@@ -1,62 +1,57 @@
 import mongoose from 'mongoose';
 import { User, TravelDestination, Location, Country } from './model.js';
 
-
 // Connect to the database
 const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGODB_URI);
         console.log(`MongoDB connected: ${conn.connection.host}`);
 
-        // Check existing collections
         const collections = await conn.connection.db.listCollections().toArray();
         const collectionNames = collections.map(collection => collection.name);
         console.log('Existing collections:', collectionNames);
 
-        // Create and populate Countries collection if it doesn't exist or is empty
-        let countryId; // Variable to hold generated country ID
+        let countryId;
         if (!collectionNames.includes('countries') || (await Country.countDocuments()) === 0) {
             await Country.init();
             console.log('Created Countries collection');
-            await Country.createIndexes({ countryId: 1 }); // Create index for countryId
+            await Country.createIndexes({ countryId: 1 });
             
-            // Generate unique countryId
-            countryId = generateUniqueId();
+            // Generate ObjectId for countryId
+            countryId = new mongoose.Types.ObjectId();
             await Country.create({
-                countryId: countryId, // Use generated ID
+                countryId: countryId, // Use generated ObjectId
                 country: "Italy"
             });
             console.log('Added default country to Countries collection');
         }
 
-        // Create and populate Locations collection if it doesn't exist or is empty
-        let locationId; // Variable to hold generated location ID
+        let locationId;
         if (!collectionNames.includes('locations') || (await Location.countDocuments()) === 0) {
             await Location.init();
             console.log('Created Locations collection');
-            await Location.createIndexes({ locationId: 1 }); // Create index for locationId
+            await Location.createIndexes({ locationId: 1 });
             
-            // Use the generated countryId to reference the created country
-            locationId = generateUniqueId();
+            // Generate ObjectId for locationId
+            locationId = new mongoose.Types.ObjectId();
             await Location.create({
-                locationId: locationId, // Use generated ID
+                locationId: locationId, // Use generated ObjectId
                 location: "Rome",
-                countryId: countryId // Reference the created countryId
+                countryId: countryId // Reference the created countryId (ObjectId)
             });
             console.log('Added default location to Locations collection');
         }
 
-        // Create and populate Users collection if it doesn't exist or is empty
-        let userId; // Variable to hold generated user ID
+        let userId;
         if (!collectionNames.includes('users') || (await User.countDocuments()) === 0) {
             await User.init();
             console.log('Created Users collection');
-            await User.createIndexes({ userId: 1, email: 1 }); 
-            
-            // Generate unique userId
-            userId = generateUniqueId();
+            await User.createIndexes({ userId: 1, email: 1 });
+
+            // Generate ObjectId for userId
+            userId = new mongoose.Types.ObjectId();
             await User.create({
-                userId: userId, // Use generated ID
+                userId: userId, // Use generated ObjectId
                 userName: "Andrea",
                 email: "andrea@example.com",
                 password: "password123",
@@ -65,23 +60,22 @@ const connectDB = async () => {
             console.log('Added default user to Users collection');
         }
 
-        // Create and populate Travel Destinations collection if it doesn't exist or is empty
         if (!collectionNames.includes('traveldestinations') || (await TravelDestination.countDocuments()) === 0) {
             await TravelDestination.init();
             console.log('Created Travel Destinations collection');
-            await TravelDestination.createIndexes({ destinationId: 1 }); // Create index for destinationId
-            
-            // Use the generated userId and locationId for references
-            let destinationId = generateUniqueId(); // Generate unique destinationId
+            await TravelDestination.createIndexes({ destinationId: 1 });
+
+            // Generate ObjectId for destinationId
+            let destinationId = new mongoose.Types.ObjectId();
             await TravelDestination.create({
-                destinationId: destinationId, // Use generated ID
+                destinationId: destinationId, // Use generated ObjectId
                 title: "Visit Rome",
                 description: "A beautiful trip to Rome, Italy.",
-                locationId: locationId, // Reference the created locationId
+                locationId: locationId, // Reference the created locationId (ObjectId)
                 picture: "http://example.com/image.jpg",
                 dateFrom: new Date(),
                 dateTo: new Date(new Date().setDate(new Date().getDate() + 7)),
-                userId: userId, // Reference the created userId
+                userId: userId, // Reference the created userId (ObjectId)
                 createDate: new Date()
             });
             console.log('Added default travel destination to Travel Destinations collection');
@@ -91,13 +85,6 @@ const connectDB = async () => {
         console.error(`Error: ${error.message}`);
         process.exit(1);
     }
-};
-
-// Function to generate a unique ID
-const generateUniqueId = () => {
-    const timestamp = Date.now();
-    const randomNum = Math.floor(Math.random() * 1000);
-    return timestamp + randomNum;
 };
 
 export default connectDB;
