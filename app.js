@@ -65,7 +65,7 @@ app.post("/api/traveldestinations", async (req, res) => {
         picture: picture,
         dateFrom: dateFrom,
         dateTo: dateTo,
-        userId: new ObjectId(userId), // Cast to ObjectId
+        userId: new ObjectId(userId), 
         createDate: createDate,
       };
   
@@ -99,6 +99,7 @@ app.post("/api/traveldestinations", async (req, res) => {
   
       const result = await myColl.updateOne(
         { destinationId: new ObjectId(id) },
+        // The $set operator allows you to update specific fields in a document
         { $set: updateData }
       );
   
