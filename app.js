@@ -58,6 +58,7 @@ app.post("/api/traveldestinations", async (req, res) => {
   
       // Ensure locationId and userId are cast to ObjectId
       const travelDestination = {
+        destinationId : new ObjectId(),
         title: title,
         description: description,
         locationId: new ObjectId(locationId), // Cast to ObjectId
@@ -79,6 +80,39 @@ app.post("/api/traveldestinations", async (req, res) => {
       res.status(500).json({ message: "Server error" });
     }
   });
+
+  app.put("/api/traveldestinations/:id", async (req, res) => {
+    try {
+      const id = req.params.id;
+  
+      // Validate ID (simple check)
+      if (!id) {
+        return res.status(400).json({ message: "Travel destination ID is required" });
+      }
+  
+      // Update the travel destination with provided fields
+      const updateData = req.body;
+  
+      await client.connect();
+      const myDB = client.db("nosql_project");
+      const myColl = myDB.collection("traveldestinations");
+  
+      const result = await myColl.updateOne(
+        { destinationId: new ObjectId(id) },
+        { $set: updateData }
+      );
+  
+      // Check if the document was found and updated
+      if (result.modifiedCount === 0) {
+        return res.status(404).json({ message: "Travel destination not found" });
+      }
+  
+      res.status(200).json({ message: "Travel destination updated successfully" });
+    } catch (error) {
+      console.error(`Error updating data: ${error.message}`);
+      res.status(500).json({ message: "Server error" });
+    }
+  });  
 
   app.delete("/api/traveldestinations/:id", async (req, res) => {
     try {
