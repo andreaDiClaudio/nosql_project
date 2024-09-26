@@ -1,12 +1,6 @@
 import mongoose from 'mongoose';
 import { User, TravelDestination, Location, Country } from './model.js';
 
-// Function to generate a unique ID
-const generateUniqueId = () => {
-    const timestamp = Date.now();
-    const randomNum = Math.floor(Math.random() * 1000);
-    return timestamp + randomNum;
-};
 
 // Connect to the database
 const connectDB = async () => {
@@ -97,6 +91,13 @@ const connectDB = async () => {
         console.error(`Error: ${error.message}`);
         process.exit(1);
     }
+};
+
+// Function to generate a unique ID
+const generateUniqueId = () => {
+    const timestamp = Date.now();
+    const randomNum = Math.floor(Math.random() * 1000);
+    return timestamp + randomNum;
 };
 
 export default connectDB;
