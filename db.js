@@ -21,7 +21,7 @@ const connectDB = async () => {
             countryId = new mongoose.Types.ObjectId();
             await Country.create({
                 countryId: countryId, // Use generated ObjectId
-                country: "Italy"
+                country: "U.S.A."
             });
             console.log('Added default country to Countries collection');
         }
@@ -36,7 +36,7 @@ const connectDB = async () => {
             locationId = new mongoose.Types.ObjectId();
             await Location.create({
                 locationId: locationId, // Use generated ObjectId
-                location: "Rome",
+                location: "New York",
                 countryId: countryId // Reference the created countryId (ObjectId)
             });
             console.log('Added default location to Locations collection');
@@ -52,8 +52,8 @@ const connectDB = async () => {
             userId = new mongoose.Types.ObjectId();
             await User.create({
                 userId: userId, // Use generated ObjectId
-                userName: "Andrea",
-                email: "andrea@example.com",
+                userName: "John Doe",
+                email: "john@example.com",
                 password: "password123",
                 createDate: new Date()
             });
@@ -69,8 +69,8 @@ const connectDB = async () => {
             let destinationId = new mongoose.Types.ObjectId();
             await TravelDestination.create({
                 destinationId: destinationId, // Use generated ObjectId
-                title: "Visit Rome",
-                description: "A beautiful trip to Rome, Italy.",
+                title: "New York 2022",
+                description: "A beautiful trip.",
                 locationId: locationId, // Reference the created locationId (ObjectId)
                 picture: "http://example.com/image.jpg",
                 dateFrom: new Date(),
