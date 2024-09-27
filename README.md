@@ -1,6 +1,6 @@
 
 # NoSQL Project
-OLA for NoSQL Project by Orestis, Sugat, Andrea
+OLA for NoSQL Project by Orestis, Saugat, Andrea
 
 # How to install
 
